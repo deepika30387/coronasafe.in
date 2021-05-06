@@ -1,0 +1,14 @@
+```{r GoogleMapLink}
+#install.packages("googlesheets4")
+library(googlesheets4)
+library(data.table)
+listLoc <- read_sheet("https://docs.google.com/spreadsheets/d/1xPTr_lMDhvNKm74Hhcsqg4shxX-7WiRkOAcR_eqz2YU/edit?usp=sharing")
+burl <- "https://www.google.com/maps/search/?api=1&query="
+
+listLoc <- listLoc %>% 
+  mutate(address = paste0(Location," ", City)) %>% 
+  mutate(address = gsub(" ","%20",address)) %>% 
+  mutate(GoogleMapsLink = paste0(burl,address)) %>% 
+  select(Location, City, GoogleMapsLink)
+
+gs4_create("Demo sheet", sheets = listLoc)
